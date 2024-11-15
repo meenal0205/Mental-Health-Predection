@@ -16,7 +16,6 @@ import Register from './pages/Register';
 
 function App() {
   return (
-
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -30,7 +29,9 @@ function App() {
             <div className='w-[85%]'>
               <div className='bg-white'>
                 <Navbar />
-                <div className='m-4' ><Outlet /></div>
+                <div className='m-4' >
+                  <Outlet />
+                </div>
 
               </div>
             </div>
@@ -40,8 +41,6 @@ function App() {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/diary' element={<Diary />} />
           <Route path='/therapists' element={<Therapists />} />
-
-
         </Route>
       </Routes>
 
