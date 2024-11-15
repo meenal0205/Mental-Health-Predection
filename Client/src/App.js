@@ -2,6 +2,8 @@ import './App.css';
 import Dashboard from './components/dashboard';
 import SideBar from './components/sidebar';
 import Navbar from './components/dashboard-components/navbar';
+import Diary from './components/diary';
+import Therapists from './components/therapists';
 import {
   BrowserRouter as Router,
   Routes,
@@ -28,13 +30,17 @@ function App() {
             <div className='w-[85%]'>
               <div className='bg-white'>
                 <Navbar />
-                <Outlet />
+                <div className='m-4' ><Outlet /></div>
+
               </div>
             </div>
 
           </div>
         } >
           <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/diary' element={<Diary />} />
+          <Route path='/therapists' element={<Therapists />} />
+
 
         </Route>
       </Routes>
