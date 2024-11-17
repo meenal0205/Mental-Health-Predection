@@ -50,7 +50,11 @@ let DiaryData = [
 const Diary = () => {
   return (
     <div>
-      <h1>Diary Entries</h1>
+
+      <div className='flex relative mb-14'>
+
+        <button className='absolute right-0 shadow-md rounded-md p-2 bg-[#46325D] text-white font-bold'>+ CREATE</button>
+      </div>
 
       <div>
         {DiaryData.map((entry, index) => (
