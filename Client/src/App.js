@@ -23,14 +23,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route element={
-          <div className='flex w-full h-full '>
+          <div className='flex w-full bg-[#f7f3ff]'>
             <div className='w-[15%]'>
               <SideBar />
             </div>
-            <div className='w-[85%] '>
-              <div className='bg-white '>
+            <div className='w-[85%]'>
+              <div className='bg-white'>
                 <Navbar />
-                <div className='p-4 bg-[#f7f3ff]'><Outlet /></div>
+                <div className='p-4 bg-[#f7f3ff] h-[90%] top-[10%] absolute w-[85%] '><Outlet /></div>
 
               </div>
             </div>
