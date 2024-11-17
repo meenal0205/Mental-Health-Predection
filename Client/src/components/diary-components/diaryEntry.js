@@ -42,7 +42,6 @@ function DiaryEntry({ title, content, date, report }) {
             <div className='my-auto'>
                 <Icon icon={`${icons[report.category]}`} width={40} className={`${colors[report.category]}`} />
             </div>
-
         </div>
 
     )

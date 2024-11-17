@@ -1,18 +1,13 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
-import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-
-
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 function DashboardLink({ name, nav, iconName }) {
-  const navigate = useNavigate();
   const location = useLocation();
   console.log(location.pathname);
   let isActive = false;
 
-  if (location.pathname == nav) {
+  if (location.pathname === nav) {
     isActive = true;
   }
 

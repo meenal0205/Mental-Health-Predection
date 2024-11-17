@@ -1,12 +1,8 @@
 import React from 'react'
 import Logo from './sidebar-components/logo'
 import DashboardLink from './dashboard-components/link'
-import { useLocation } from 'react-router-dom'
-
 
 function SideBar() {
-
-
   return (
     <div className='w-[15%] fixed h-[100%] text-[#EBE0FF] bg-[#46325D]'>
       <Logo />
