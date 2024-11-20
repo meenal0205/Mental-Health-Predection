@@ -1,20 +1,15 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
 import pickle
 import numpy as np
 from scipy.sparse import hstack
 import re
-from flask import Flask, request,Response, redirect
-import requests 
-
-from flask import Flask, jsonify, request, session
+from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from gridfs import GridFS
 from flask_cors import CORS
 import os
-from datetime import datetime
-
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,13 +24,10 @@ client = MongoClient(str(os.getenv('MONGO_URI')))
 db = client.get_database()
 fs = GridFS(db)
 
-
-
-
-with open("C:/Major Project/Server/TfidfVectorizer.pkl", 'rb') as f:
+with open("./Server/TfidfVectorizer.pkl", 'rb') as f:
     vectorizer = pickle.load(f)
 
-with open("C:/Major Project/Server/LogisticModel.pkl", 'rb') as file:  
+with open("./Server/LogisticModel.pkl", 'rb') as file:  
     model = pickle.load(file)
 
 
@@ -77,11 +69,36 @@ def createEntry():
 @app.route("/get-reports-by-userid",)
 def getReportsByUserId():
     userid = request.args.get('id')
-    data =(mongo.db.reports.find({'userId':int(userid)}, {"_id": 0}))
+    data = mongo.db.reports.find({'userId':int(userid)}, {"_id": 0})
     return list(data)
 
 
+@app.route("/get-weekly-monthly-reports")
+def getWeeklyMonthlyReports():
+    userid = request.args.get('id')
+    weekly_data = mongo.db.reports.find(
+        {
+            'userId': int(userid),
+            'created_at': {
+                "$gte": datetime.now() - timedelta(days = 7)
+            }
+        },
+        {'_id': 0, 'created_at': 1, 'sentiment_score': 1}
+    )
 
+    monthly_data = mongo.db.reports.find(
+        {
+            'userId':int(userid),
+            'created_at': {
+                "$gte": datetime.now() - timedelta(days = 30)
+            }
+        },
+        {'_id': 0, 'created_at': 1, 'sentiment_score': 1}
+    )
+    return jsonify({
+        "weekly_report": list(weekly_data),
+        "monthly_report": list(monthly_data)
+    })
 
     
 if __name__=='__main__':
