@@ -15,6 +15,10 @@ from flask_cors import CORS
 import os
 from datetime import datetime
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 app = Flask(__name__)
 app.config["MONGO_URI"] = str(os.getenv('MONGO_URI'))
 
@@ -56,32 +60,29 @@ def generate(sentence):
 
 
 
+ranking ={'Normal':0,'Stress':1,'Anxiety':2, 'Personality disorder':3,'Depression':4 ,'Bipolar':5,'Suicidal':6}
+
+
+
 @app.route("/create-diary-entry", methods=['POST'])
 def createEntry():
     data = request.get_json()
     diary_title=data['title']
     user_id=data['user']
     diary_entry= data['diary_entry']
-    mongo.db.reports.insert_one({'userId':user_id,'title':diary_title,'content':diary_entry,'created_at':datetime.today().replace(microsecond=0),'updated_at': datetime.today().replace(microsecond=0)})
+    result = generate(diary_title+diary_entry)
+    mongo.db.reports.insert_one({'userId':user_id,'title':diary_title,'content':diary_entry,'created_at':datetime.today().replace(microsecond=0),'updated_at': datetime.today().replace(microsecond=0), 'sentiment':result,'sentiment_score':ranking[result]}, )
+    return result
 
-    return generate(diary_title+diary_entry)
+@app.route("/get-reports-by-userid",)
+def getReportsByUserId():
+    userid = request.args.get('id')
+    data =(mongo.db.reports.find({'userId':int(userid)}, {"_id": 0}))
+    return list(data)
+
 
 
 
     
-
-
-
-
-    
-
-
-    
-
-
-
-
-
-
 if __name__=='__main__':
     app.run(debug=True)
