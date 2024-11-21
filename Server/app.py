@@ -73,28 +73,35 @@ def getReportsByUserId():
     return list(data)
 
 
+def get_data_by_timedelta(user_id, days):
+    start_date = datetime.today().replace(microsecond=0) - timedelta(days=days)
+    query = {
+        'userId': int(user_id),
+        'updated_at': {"$gte": start_date}
+    }
+    projection = {
+        '_id': 0,
+        'updated_at': 1,
+        'sentiment_score': 1,
+        'date': {"$dayOfMonth": "$created_at"},
+        'month': {"$month": "$created_at"},
+        'year': {"$year": "$created_at"}
+    }
+    pipeline = [
+        {"$match": query},
+        {"$project": projection},
+        {"$sort": {"updated_at": 1}}
+    ]
+
+    return list(mongo.db.reports.aggregate(pipeline))
+
+
 @app.route("/get-weekly-monthly-reports")
 def getWeeklyMonthlyReports():
     userid = request.args.get('id')
-    weekly_data = mongo.db.reports.find(
-        {
-            'userId': int(userid),
-            'created_at': {
-                "$gte": datetime.now() - timedelta(days = 7)
-            }
-        },
-        {'_id': 0, 'created_at': 1, 'sentiment_score': 1}
-    )
+    weekly_data = get_data_by_timedelta(userid, 7)
+    monthly_data = get_data_by_timedelta(userid, 30)
 
-    monthly_data = mongo.db.reports.find(
-        {
-            'userId':int(userid),
-            'created_at': {
-                "$gte": datetime.now() - timedelta(days = 30)
-            }
-        },
-        {'_id': 0, 'created_at': 1, 'sentiment_score': 1}
-    )
     return jsonify({
         "weekly_report": list(weekly_data),
         "monthly_report": list(monthly_data)
