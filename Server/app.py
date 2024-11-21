@@ -28,7 +28,10 @@ with open("./Server/TfidfVectorizer.pkl", 'rb') as f:
     vectorizer = pickle.load(f)
 
 with open("./Server/LogisticModel.pkl", 'rb') as file:  
-    model = pickle.load(file)
+    model = pickle.load(file) 
+ranking ={'Normal':0,'Stress':1,'Anxiety':2, 'Personality disorder':3,'Depression':4 ,'Bipolar':5,'Suicidal':6}
+
+labels = {0: 'Anxiety', 1: 'Bipolar', 2: 'Depression', 3: 'Normal', 4: 'Personality disorder', 5: 'Stress', 6: 'Suicidal'}
 
 
 def remove_patterns(text):
@@ -45,48 +48,50 @@ def generate(sentence):
     num_of_sentences = sentence.count('.') + sentence.count('!') + sentence.count('?')  
     sentence_num = np.array([[num_of_characters, num_of_sentences]])
     sentence_combined = hstack([sentence_tfidf, sentence_num])
-    labels = {0: 'Anxiety', 1: 'Bipolar', 2: 'Depression', 3: 'Normal', 4: 'Personality disorder', 5: 'Stress', 6: 'Suicidal'}
     y_predict = model.predict(sentence_combined)
     predicted_label = labels[y_predict[0]]
     return predicted_label
 
 
-ranking ={'Normal':0,'Stress':1,'Anxiety':2, 'Personality disorder':3,'Depression':4 ,'Bipolar':5,'Suicidal':6}
 
 
 @app.route("/create-diary-entry", methods=['POST'])
 def createEntry():
     data = request.get_json()
     diary_title=data['title']
-    user_id=data['user']
+    username=data['username']
     diary_entry= data['diary_entry']
     result = generate(diary_title+diary_entry)
-    mongo.db.reports.insert_one({'userId':user_id,'title':diary_title,'content':diary_entry,'created_at':datetime.today().replace(microsecond=0),'updated_at': datetime.today().replace(microsecond=0), 'sentiment':result,'sentiment_score':ranking[result]}, )
+    mongo.db.reports.insert_one({'username':username,'title':diary_title,'content':diary_entry,'created_at':datetime.today().replace(microsecond=0),'created_at': datetime.today().replace(microsecond=0), 'sentiment':result,'sentiment_score':ranking[result]}, )
     return result
 
 
 @app.route("/create-user",methods=["POST"])
 def createUser():
     data = request.get_json()
+    type= data['type']
     username=data['username']
     password=data['password']
-    type= data['type']
     location = data['location']
+
+    if type=='patient':
+         mongo.db.users.insert_one({'username':username,'password':password,'type':type,'location':location})
+         return "User created",202
+    
     years_of_exp= data['exp']
     userExists = mongo.db.users.find_one({'username':username})
     if(userExists):
         return "username already exists"
     if(type=='therapist'):
          mongo.db.users.insert_one({'username':username,'password':password,'type':type,'location':location,'exp':years_of_exp})
-    else:
-         mongo.db.users.insert_one({'username':username,'password':password,'type':type,'location':location})
+         return "User created",202
+    
 
-    return data
 
 
 @app.route("/get-all-therapists")
 def getAllTherapists():
-    data = mongo.db.users.find({"type":"therapist"})
+    data = mongo.db.users.find({'type':'therapist'},{'_id':0})
     return list(data)
 
 
@@ -95,39 +100,46 @@ def login():
     data = request.get_json()
     username=data['username']
     password=data['password']
+    type = data['type']
     userExists = mongo.db.users.find_one({'username':username})
-    if(userExists and username==userExists['username'] and password==userExists['password']):
-        return data
-    return "user does not exist please register."    
+    if(userExists and username==userExists['username'] and password==userExists['password'] and type==userExists['type']):
+        return data,202
+    elif( userExists and type!=userExists['type']  ):
+        return "Please select correct role"
+    elif (userExists and username==userExists['username'] and password!=userExists['password']):
+        return "Wrong password"
+    
+    else:
+        return "user does not exist please register."    
 
 
 @app.route("/update-diary-entry", methods=['POST'])
 def updateEntry():
     data = request.get_json()
     diary_title=data['title']
-    user_id=data['user']
+    username=data['user']
     diary_entry= data['diary_entry']
     result = generate(diary_title+diary_entry)
-    mongo.db.reports.update_one({'userId':user_id},{'$set':{'title':diary_title,'content':diary_entry,'updated_at': datetime.today().replace(microsecond=0), 'sentiment':result,'sentiment_score':ranking[result]}})
+    mongo.db.reports.update_one({'username':username},{'$set':{'title':diary_title,'content':diary_entry,'created_at': datetime.today().replace(microsecond=0), 'sentiment':result,'sentiment_score':ranking[result]}})
     return result
 
 
-@app.route("/get-reports-by-userid",)
-def getReportsByUserId():
-    userid = request.args.get('id')
-    data = mongo.db.reports.find({'userId':int(userid)}, {"_id": 0})
+@app.route("/get-reports-by-username",)
+def getReportsByUsername():
+    username = request.args.get('username')
+    data = mongo.db.reports.find({'username':username}, {"_id": 0})
     return list(data)
 
 
-def get_data_by_timedelta(user_id, days):
+def get_data_by_timedelta(username, days):
     start_date = datetime.today().replace(microsecond=0) - timedelta(days=days)
     query = {
-        'userId': int(user_id),
-        'updated_at': {"$gte": start_date}
+        'username':username,
+        'created_at': {"$gte": start_date}
     }
     projection = {
         '_id': 0,
-        'updated_at': 1,
+        'created_at': 1,
         'sentiment_score': 1,
         'date': {"$dayOfMonth": "$created_at"},
         'month': {"$month": "$created_at"},
@@ -136,7 +148,7 @@ def get_data_by_timedelta(user_id, days):
     pipeline = [
         {"$match": query},
         {"$project": projection},
-        {"$sort": {"updated_at": 1}}
+        {"$sort": {"created_at": 1}}
     ]
 
     return list(mongo.db.reports.aggregate(pipeline))
@@ -144,9 +156,9 @@ def get_data_by_timedelta(user_id, days):
 
 @app.route("/get-weekly-monthly-reports")
 def getWeeklyMonthlyReports():
-    userid = request.args.get('id')
-    weekly_data = get_data_by_timedelta(userid, 7)
-    monthly_data = get_data_by_timedelta(userid, 30)
+    username = request.args.get('username')
+    weekly_data = get_data_by_timedelta(username, 7)
+    monthly_data = get_data_by_timedelta(username, 30)
 
     return jsonify({
         "weekly_report": list(weekly_data),
