@@ -22,25 +22,27 @@ const colors = {
 }
 
 const icons = {
-    Depressed: "emojione-monotone:disappointed-face",
+    Depression: "emojione-monotone:disappointed-face",
     Anxiety: "fluent-emoji-high-contrast:worried-face",
     Normal: "icon-park-outline:slightly-smiling-face",
 }
 
-function DiaryEntry({ title, content, date, report }) {
+function DiaryEntry({ title, content, date, sentiment }) {
+
 
     return (
         <div className='flex gap-x-3 bg-white shadow-md rounded-md border-transparent mb-5 h-28 p-4 font-mono'>
             <div className='flex flex-col justify-center mx-4 border-r-2 border-gray-300 pr-5 '>
-                <p className='mx-auto text-2xl font-bold '>{date.day}</p>
-                <p>{getMonthNameFromDate(date.month)}</p>
+                <p className='mx-auto text-2xl font-bold '>{date.split(" ")[1]}</p>
+                <p>{date.split(" ")[2]}</p>
+
             </div>
             <div className=' mx-4 border-r-2 border-gray-300 pr-5 '>
                 <h2 className='font-semibold mb-1'>{title}</h2>
                 <p className='text-sm'>{sliceByWords(content, 180)}... </p>
             </div>
             <div className='my-auto'>
-                <Icon icon={`${icons[report.category]}`} width={40} className={`${colors[report.category]}`} />
+                <Icon icon={`${icons[sentiment]}`} width={40} className={`${colors[sentiment]}`} />
             </div>
         </div>
 

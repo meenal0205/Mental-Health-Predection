@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom';
 
 function DashboardLink({ name, nav, iconName }) {
   const location = useLocation();
-  console.log(location.pathname);
   let isActive = false;
 
   if (location.pathname === nav) {
