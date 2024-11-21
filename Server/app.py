@@ -21,7 +21,7 @@ mongo = PyMongo(app)
 CORS(app)
 
 client = MongoClient(str(os.getenv('MONGO_URI')))
-db = client.get_database()
+db = client.get_database() 
 fs = GridFS(db)
 
 with open("./Server/TfidfVectorizer.pkl", 'rb') as f:
@@ -51,9 +51,7 @@ def generate(sentence):
     return predicted_label
 
 
-
 ranking ={'Normal':0,'Stress':1,'Anxiety':2, 'Personality disorder':3,'Depression':4 ,'Bipolar':5,'Suicidal':6}
-
 
 
 @app.route("/create-diary-entry", methods=['POST'])
@@ -65,6 +63,54 @@ def createEntry():
     result = generate(diary_title+diary_entry)
     mongo.db.reports.insert_one({'userId':user_id,'title':diary_title,'content':diary_entry,'created_at':datetime.today().replace(microsecond=0),'updated_at': datetime.today().replace(microsecond=0), 'sentiment':result,'sentiment_score':ranking[result]}, )
     return result
+
+
+@app.route("/create-user",methods=["POST"])
+def createUser():
+    data = request.get_json()
+    username=data['username']
+    password=data['password']
+    type= data['type']
+    location = data['location']
+    years_of_exp= data['exp']
+    userExists = mongo.db.users.find_one({'username':username})
+    if(userExists):
+        return "username already exists"
+    if(type=='therapist'):
+         mongo.db.users.insert_one({'username':username,'password':password,'type':type,'location':location,'exp':years_of_exp})
+    else:
+         mongo.db.users.insert_one({'username':username,'password':password,'type':type,'location':location})
+
+    return data
+
+
+@app.route("/get-all-therapists")
+def getAllTherapists():
+    data = mongo.db.users.find({"type":"therapist"})
+    return list(data)
+
+
+@app.route("/login",methods=['POST'])
+def login():
+    data = request.get_json()
+    username=data['username']
+    password=data['password']
+    userExists = mongo.db.users.find_one({'username':username})
+    if(userExists and username==userExists['username'] and password==userExists['password']):
+        return data
+    return "user does not exist please register."    
+
+
+@app.route("/update-diary-entry", methods=['POST'])
+def updateEntry():
+    data = request.get_json()
+    diary_title=data['title']
+    user_id=data['user']
+    diary_entry= data['diary_entry']
+    result = generate(diary_title+diary_entry)
+    mongo.db.reports.update_one({'userId':user_id},{'$set':{'title':diary_title,'content':diary_entry,'updated_at': datetime.today().replace(microsecond=0), 'sentiment':result,'sentiment_score':ranking[result]}})
+    return result
+
 
 @app.route("/get-reports-by-userid",)
 def getReportsByUserId():
@@ -107,6 +153,6 @@ def getWeeklyMonthlyReports():
         "monthly_report": list(monthly_data)
     })
 
-    
+
 if __name__=='__main__':
     app.run(debug=True)
