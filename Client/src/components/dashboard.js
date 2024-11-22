@@ -66,14 +66,14 @@ function Dashboard() {
       <div className='p-4 col-span-2 row-auto rounded-md shadow-lg bg-white z-0 flex justify-center'>
         <DashboardCalender username={getUserdetails().username} />
       </div>
-      <div className='p-4 col-span-2 row-auto rounded-md shadow-lg bg-white'>
+      <div className='p-8 col-span-2 row-auto rounded-md shadow-lg bg-white flex flex-col items-center '>
+        <h2 className='font-semibold text-xs text-gray-600'>Weekly Report</h2>
         <PieChart PieData={PieChartData} />
       </div>
       <div className='p-4 col-span-3 row-auto rounded-md shadow-lg bg-white'>
         <LineChart LineData={LineChartDataMonthly} title="Monthly Reports" />
       </div>
     </div>
-
   )
 }
 

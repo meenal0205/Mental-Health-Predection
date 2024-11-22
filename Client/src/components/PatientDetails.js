@@ -34,6 +34,19 @@ function PatientDetails() {
 
     return (
         <div>
+            <div className='p-4 grid grid-cols-3 gap-4'>
+                <div className='p-8 row-auto rounded-md shadow-lg bg-white flex flex-col items-center gap-4'>
+                    <h2 className='font-semibold text-xl'>Weekly Report</h2>
+                    <PieChart PieData={PieChartDataWeekly} />
+                </div>
+                <div className='p-8 row-auto rounded-md shadow-lg bg-white flex flex-col items-center gap-4'>
+                    <h2 className='font-semibold text-xl'>Monthly Report</h2>
+                    <PieChart PieData={PieChartDataMonthly} />
+                </div>
+                <div className='p-4 row-auto rounded-md shadow-lg bg-white flex flex-col items-center gap-4'>
+                    <DashboardCalender username={location.state.name} />
+                </div>
+            </div>
             <div>
                 {DiaryEntries.map((entry, index) => (
                     <div>
@@ -42,24 +55,8 @@ function PatientDetails() {
 
                     </div>
                 ))}
-
-
             </div>
-            <div className='p-4 grid grid-cols-3 gap-4'>
-                <div className='p-4 row-auto rounded-md shadow-lg bg-white flex flex-col items-center gap-4'>
-                    <h2 className='font-semibold text-xl'>Weekly Report</h2>
-                    <PieChart PieData={PieChartDataWeekly} />
-                </div>
 
-                <div className='p-4 row-auto rounded-md shadow-lg bg-white flex flex-col items-center gap-4'>
-                    <h2 className='font-semibold text-xl'>Monthly Report</h2>
-                    <PieChart PieData={PieChartDataMonthly} />
-                </div>
-                <div className='p-4 row-auto rounded-md shadow-lg bg-white flex flex-col items-center gap-4'>
-                    <DashboardCalender username={location.state.name} />
-                </div>
-
-            </div>
         </div>
     )
 }

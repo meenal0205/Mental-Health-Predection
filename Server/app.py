@@ -29,6 +29,7 @@ with open("./Server/TfidfVectorizer.pkl", 'rb') as f:
 
 with open("./Server/LogisticModel.pkl", 'rb') as file:  
     model = pickle.load(file) 
+    
 ranking ={'Normal':0,'Stress':1,'Anxiety':2, 'Personality disorder':3,'Depression':4 ,'Bipolar':5,'Suicidal':6}
 
 labels = {0: 'Anxiety', 1: 'Bipolar', 2: 'Depression', 3: 'Normal', 4: 'Personality disorder', 5: 'Stress', 6: 'Suicidal'}
