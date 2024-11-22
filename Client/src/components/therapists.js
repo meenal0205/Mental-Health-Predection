@@ -2,13 +2,6 @@ import React, { useState, useEffect } from 'react';
 import TherapistEntry from './therapists-components/therapistEntry';
 import { getAllTherapists } from '../services/services';
 
-
-
-
-
-
-
-
 function Therapists() {
   const [therapists, setTherapists] = useState([])
   useEffect(() => {
@@ -18,8 +11,6 @@ function Therapists() {
     };
 
     TherapistList();
-
-
   }, [])
 
   return (

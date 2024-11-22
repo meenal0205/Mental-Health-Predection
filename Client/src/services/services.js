@@ -19,7 +19,6 @@ async function createDiaryEntry(title, username, diary_entry) {
 
 }
 
-
 async function createUser(username, password, type, location, exp) {
 
     try {
@@ -51,7 +50,6 @@ async function createUser(username, password, type, location, exp) {
     }
 }
 
-
 async function getAllTherapists() {
     try {
 
@@ -63,18 +61,21 @@ async function getAllTherapists() {
     }
 }
 
+async function consultTherapist(username, therapist) {
+    const response = await axios.post(URL + "consult-therapist", {
+        "username": username,
+        "therapist": therapist
+    });
+    return response;
+}
 
 async function login(username, password, type) {
-    try {
-        const response = await axios.post(URL + 'login', {
-            "username": username,
-            "password": password,
-            "type": type
-        })
-        return response
-    } catch (error) {
-        console.error(error);
-    }
+    const response = await axios.post(URL + 'login', {
+        "username": username,
+        "password": password,
+        "type": type
+    })
+    return response
 }
 
 
@@ -93,7 +94,6 @@ async function updateEntry(title, user, diary_entry) {
 
 
 }
-
 
 async function getReportByUsername(username) {
 
@@ -128,4 +128,4 @@ async function getAllDiaryEntriesByUsername(username) {
 }
 
 
-export { createDiaryEntry, createUser, getDashboardData, getReportByUsername, updateEntry, login, getAllTherapists, getAllDiaryEntriesByUsername }
+export { createDiaryEntry, createUser, getDashboardData, getReportByUsername, updateEntry, login, getAllTherapists, consultTherapist, getAllDiaryEntriesByUsername }

@@ -53,84 +53,6 @@ def generate(sentence):
     return predicted_label
 
 
-
-
-@app.route("/create-diary-entry", methods=['POST'])
-def createEntry():
-    data = request.get_json()
-    diary_title=data['title']
-    username=data['username']
-    diary_entry= data['diary_entry']
-    result = generate(diary_title+diary_entry)
-    mongo.db.reports.insert_one({'username':username,'title':diary_title,'content':diary_entry,'created_at':datetime.today().replace(microsecond=0),'created_at': datetime.today().replace(microsecond=0), 'sentiment':result,'sentiment_score':ranking[result]}, )
-    return result
-
-
-@app.route("/create-user",methods=["POST"])
-def createUser():
-    data = request.get_json()
-    type= data['type']
-    username=data['username']
-    password=data['password']
-    location = data['location']
-
-    if type=='patient':
-         mongo.db.users.insert_one({'username':username,'password':password,'type':type,'location':location})
-         return "User created",202
-    
-    years_of_exp= data['exp']
-    userExists = mongo.db.users.find_one({'username':username})
-    if(userExists):
-        return "username already exists"
-    if(type=='therapist'):
-         mongo.db.users.insert_one({'username':username,'password':password,'type':type,'location':location,'exp':years_of_exp})
-         return "User created",202
-    
-
-
-
-@app.route("/get-all-therapists")
-def getAllTherapists():
-    data = mongo.db.users.find({'type':'therapist'},{'_id':0})
-    return list(data)
-
-
-@app.route("/login",methods=['POST'])
-def login():
-    data = request.get_json()
-    username=data['username']
-    password=data['password']
-    type = data['type']
-    userExists = mongo.db.users.find_one({'username':username})
-    if(userExists and username==userExists['username'] and password==userExists['password'] and type==userExists['type']):
-        return data,202
-    elif( userExists and type!=userExists['type']  ):
-        return "Please select correct role"
-    elif (userExists and username==userExists['username'] and password!=userExists['password']):
-        return "Wrong password"
-    
-    else:
-        return "user does not exist please register."    
-
-
-@app.route("/update-diary-entry", methods=['POST'])
-def updateEntry():
-    data = request.get_json()
-    diary_title=data['title']
-    username=data['user']
-    diary_entry= data['diary_entry']
-    result = generate(diary_title+diary_entry)
-    mongo.db.reports.update_one({'username':username},{'$set':{'title':diary_title,'content':diary_entry,'created_at': datetime.today().replace(microsecond=0), 'sentiment':result,'sentiment_score':ranking[result]}})
-    return result
-
-
-@app.route("/get-reports-by-username",)
-def getReportsByUsername():
-    username = request.args.get('username')
-    data = mongo.db.reports.find({'username':username}, {"_id": 0})
-    return list(data)
-
-
 def get_data_by_timedelta(username, days):
     start_date = datetime.today().replace(microsecond=0) - timedelta(days=days)
     query = {
@@ -154,6 +76,28 @@ def get_data_by_timedelta(username, days):
     return list(mongo.db.reports.aggregate(pipeline))
 
 
+@app.route("/create-diary-entry", methods=['POST'])
+def createEntry():
+    data = request.get_json()
+    diary_title=data['title']
+    username=data['username']
+    diary_entry= data['diary_entry']
+    result = generate(diary_title+diary_entry)
+    mongo.db.reports.insert_one({'username':username,'title':diary_title,'content':diary_entry,'created_at':datetime.today().replace(microsecond=0),'created_at': datetime.today().replace(microsecond=0), 'sentiment':result,'sentiment_score':ranking[result]}, )
+    return result
+
+
+@app.route("/update-diary-entry", methods=['POST'])
+def updateEntry():
+    data = request.get_json()
+    diary_title=data['title']
+    username=data['user']
+    diary_entry= data['diary_entry']
+    result = generate(diary_title+diary_entry)
+    mongo.db.reports.update_one({'username':username},{'$set':{'title':diary_title,'content':diary_entry,'created_at': datetime.today().replace(microsecond=0), 'sentiment':result,'sentiment_score':ranking[result]}})
+    return result
+
+
 @app.route("/get-weekly-monthly-reports")
 def getWeeklyMonthlyReports():
     username = request.args.get('username')
@@ -164,6 +108,71 @@ def getWeeklyMonthlyReports():
         "weekly_report": list(weekly_data),
         "monthly_report": list(monthly_data)
     })
+
+
+@app.route("/get-reports-by-username")
+def getReportsByUsername():
+    username = request.args.get('username')
+    data = mongo.db.reports.find({'username':username}, {"_id": 0})
+    return list(data)
+
+
+@app.route("/create-user",methods=["POST"])
+def createUser():
+    data = request.get_json()
+    type = data['type']
+    username = data['username']
+    password = data['password']
+    location = data['location']
+
+    if type == 'patient':
+         mongo.db.users.insert_one({'username': username, 'password': password, 'type': type, 'location': location, 'therapist': ''})
+         return "User created",202
+    
+    years_of_exp= data['exp']
+    userExists = mongo.db.users.find_one({'username': username})
+    if userExists:
+        return jsonify({"error": "Username already exists"}), 403
+    if type == 'therapist':
+         mongo.db.users.insert_one({'username': username,'password': password,'type': type,'location': location,'exp': years_of_exp})
+         return "User created", 202
+
+
+@app.route("/login",methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data['username']
+    password = data['password']
+    type = data['type']
+    userExists = mongo.db.users.find_one({'username': username}, {"_id": 0})
+    if userExists:
+        if type != userExists['type']:
+            return jsonify({'error': 'Please select correct role'}), 403
+        elif password != userExists['password']:
+            return jsonify({'error': 'Wrong password'}), 401
+        else:
+            return jsonify(userExists), 200
+    else:
+        return jsonify({'error': 'User does not exist. Please register'}), 404  
+
+
+@app.route("/get-all-therapists")
+def getAllTherapists():
+    data = mongo.db.users.find({'type':'therapist'},{'_id':0})
+    return list(data)
+
+
+@app.route("/consult-therapist", methods=['POST'])
+def consultTherapist():
+    data = request.get_json()
+    username = data['username']
+    therapist = data['therapist']
+
+    result = mongo.db.users.update_one({'username': username}, {"$set": {"therapist": therapist}})
+    print(result)
+    if result is not None:
+        return jsonify({"message": "Successfully consulted"}), 200
+    return jsonify({"error": "Couldn't consult the selected therapist. Please try again later"}), 400
 
 
 if __name__=='__main__':

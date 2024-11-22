@@ -13,6 +13,7 @@ import {
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import TherapistDashboard from './pages/TherapistDashboard';
 
 function App() {
   return (
@@ -40,6 +41,16 @@ function App() {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/diary' element={<Diary />} />
           <Route path='/therapists' element={<Therapists />} />
+        </Route>
+        <Route element={
+          <div className='w-full bg-[#f7f3ff]'>
+            <Navbar />
+            <div className='p-4 bg-[#f7f3ff] min-h-[90%] top-[8%] absolute w-full'>
+              <Outlet />
+            </div>
+          </div>
+        } >
+          <Route path='/therapist-dashboard' element={<TherapistDashboard />} />
         </Route>
       </Routes>
     </Router>
