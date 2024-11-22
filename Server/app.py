@@ -113,7 +113,14 @@ def getWeeklyMonthlyReports():
 @app.route("/get-reports-by-username")
 def getReportsByUsername():
     username = request.args.get('username')
-    data = mongo.db.reports.find({'username':username}, {"_id": 0})
+    query = {'username':username}
+    projection = {"_id": 0}
+    pipeline = [
+        {"$match": query},
+        {"$project": projection},
+        {"$sort": {"created_at": 1}}
+    ]
+    data = mongo.db.reports.aggregate(pipeline)
     return list(data)
 
 

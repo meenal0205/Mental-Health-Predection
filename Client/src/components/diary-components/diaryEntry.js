@@ -16,22 +16,28 @@ function sliceByWords(input, maxLength) {
 }
 
 const colors = {
-    Depressed: "text-blue-400",
-    Anxiety: "text-green-400",
-    Normal: "text-yellow-400",
+    "Depressed": "text-blue-400",
+    "Anxiety": "text-green-400",
+    "Normal": "text-yellow-400",
+    "Personality Disorder": "text-orange-400",
+    "Stress": "text-indigo-400",
+    "Suicidal": "text-red-100"
 }
 
 const icons = {
-    Depression: "emojione-monotone:disappointed-face",
-    Anxiety: "fluent-emoji-high-contrast:worried-face",
-    Normal: "icon-park-outline:slightly-smiling-face",
+    "Depression": "emojione-monotone:disappointed-face",
+    "Anxiety": "fluent-emoji-high-contrast:worried-face",
+    "Normal": "icon-park-outline:slightly-smiling-face",
+    "Personality Disorder": "game-icons:duality-mask",
+    "Stress": "material-symbols:sentiment-stressed-outline",
+    "Suicidal": "fa6-regular:face-sad-tear"
 }
 
 function DiaryEntry({ title, content, date, sentiment }) {
 
     return (
         <div className='flex gap-x-3 bg-white shadow-md rounded-md border-transparent mb-5 h-fit p-4 font-mono'>
-            <div className='flex flex-col justify-center mx-4 border-r-2 border-gray-300 pr-5 '>
+            <div className='flex flex-col justify-center mx-4 border-r-2 border-gray-300 pr-5 text-'>
                 <p className='mx-auto text-2xl font-bold '>{date.split(" ")[1]}</p>
                 <p>{date.split(" ")[2]}</p>
 
