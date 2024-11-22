@@ -15,22 +15,14 @@ function sliceByWords(input, maxLength) {
     return lastSpaceIndex !== -1 ? sliced.slice(0, lastSpaceIndex) : sliced;
 }
 
-const colors = {
-    "Depressed": "text-blue-400",
-    "Anxiety": "text-green-400",
-    "Normal": "text-yellow-400",
-    "Personality Disorder": "text-orange-400",
-    "Stress": "text-indigo-400",
-    "Suicidal": "text-red-100"
-}
-
 const icons = {
-    "Depression": "emojione-monotone:disappointed-face",
-    "Anxiety": "fluent-emoji-high-contrast:worried-face",
-    "Normal": "icon-park-outline:slightly-smiling-face",
-    "Personality Disorder": "game-icons:duality-mask",
-    "Stress": "material-symbols:sentiment-stressed-outline",
-    "Suicidal": "fa6-regular:face-sad-tear"
+    "Depression": "fluent-emoji:disappointed-face",
+    "Anxiety": "fluent-emoji:worried-face",
+    "Normal": "fluent-emoji:slightly-smiling-face",
+    "Personality Disorder": "fluent-emoji:face-with-spiral-eyes",
+    "Stress": "fluent-emoji:tired-face",
+    "Suicidal": "fluent-emoji:sad-but-relieved-face",
+    "Bipolar": "fluent-emoji:face-in-clouds"
 }
 
 function DiaryEntry({ title, content, date, sentiment }) {
@@ -47,7 +39,7 @@ function DiaryEntry({ title, content, date, sentiment }) {
                 <p className='text-sm'>{content} </p>
             </div>
             <div className='my-auto'>
-                <Icon icon={`${icons[sentiment]}`} width={40} className={`${colors[sentiment]}`} />
+                <Icon icon={`${icons[sentiment]}`} width={40} />
             </div>
         </div>
 
