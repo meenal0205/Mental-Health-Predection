@@ -21,7 +21,11 @@ const AuthForm = ({ type }) => {
                 if (response.status === 200) {
                     setUser(response.data.username, response.data.type, response.data.therapist ? response.data.therapist : "")
                     console.log(getUserdetails());
-                    navigate('/dashboard')
+                    if (userType === 'therapist')
+                        navigate('/therapist-dashboard')
+                    else {
+                        navigate("/dashboard")
+                    }
                 }
             }
             catch (error) {

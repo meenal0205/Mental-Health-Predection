@@ -14,6 +14,7 @@ import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import TherapistDashboard from './pages/TherapistDashboard';
+import Profile from './components/profile';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/diary' element={<Diary />} />
           <Route path='/therapists' element={<Therapists />} />
+          <Route path='/profile' element={<Profile />} />
         </Route>
         <Route element={
           <div className='w-full bg-[#f7f3ff]'>
