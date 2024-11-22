@@ -3,10 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { getAllDiaryEntriesByUsername, getDashboardData } from '../services/services';
 import DiaryEntry from './diary-components/diaryEntry';
 import PieChart from './pieChart';
-import { Pie } from 'react-chartjs-2';
 import DashboardCalender from './dashboard-components/calender';
-import { getUserdetails } from '../utils/session';
-
 
 function PatientDetails() {
     const location = useLocation();

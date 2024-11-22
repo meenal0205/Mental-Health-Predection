@@ -1,20 +1,6 @@
 import React from 'react'
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-function getMonthNameFromDate(monthNumber) {
-    const date = new Date();
-    date.setMonth(monthNumber - 1);
-    return date.toLocaleString("default", { month: "short" });
-}
-
-function sliceByWords(input, maxLength) {
-    if (input.length <= maxLength) return input;
-
-    const sliced = input.slice(0, maxLength);
-    const lastSpaceIndex = sliced.lastIndexOf(" ");
-    return lastSpaceIndex !== -1 ? sliced.slice(0, lastSpaceIndex) : sliced;
-}
-
 const icons = {
     "Depression": "fluent-emoji:disappointed-face",
     "Anxiety": "fluent-emoji:worried-face",

@@ -5,7 +5,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 
 function PieChart({ PieData }) {
-    const [DataPie, setDataPie] = useState(PieData);
     const [ChartData, setChartData] = useState([0, 0, 0, 0, 0, 0, 0]);
 
     useEffect(() => {

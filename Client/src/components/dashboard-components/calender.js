@@ -2,19 +2,8 @@ import React, { useEffect, useState } from "react";
 import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
 import { Calendar } from "@hassanmojab/react-modern-calendar-datepicker";
 import { getAllDiaryEntriesByUsername } from "../../services/services";
-import { getUserdetails } from "../../utils/session";
-
 
 const DashboardCalender = ({ username }) => {
-  let date = new Date();
-  const defaultValue = {
-    year: date.getFullYear(),
-    month: date.getMonth(),
-    day: date.getDay(),
-  };
-
-  const [selectedDay, setSelectedDay] = useState(defaultValue);
-
   const [Customdates, setCustomdates] = useState([])
 
   const classnames = {

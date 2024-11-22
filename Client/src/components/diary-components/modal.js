@@ -1,12 +1,8 @@
 import { getUserdetails } from '../../utils/session';
-import axios from 'axios';
 import React, { useState } from 'react'
 import { createDiaryEntry } from '../../services/services';
 
-const Modal = ({ user, closeModal }) => {
-    const [name, setName] = useState('');
-    const [code, setCode] = useState('');
-    const [message, setMessage] = useState('');
+const Modal = ({ closeModal }) => {
     const username = getUserdetails().username;
     const [title, setTitle] = useState("")
     const [content, setcontent] = useState("")

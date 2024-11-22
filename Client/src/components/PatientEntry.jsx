@@ -1,7 +1,6 @@
 import { Icon } from '@iconify/react/dist/iconify.js'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getAllDiaryEntriesByUsername } from '../services/services'
 
 const PatientEntry = ({ name, location }) => {
     const navigate = useNavigate();

@@ -6,7 +6,6 @@ import DashboardCalender from './dashboard-components/calender';
 import { getDashboardData } from '../services/services';
 import { getUserdetails } from '../utils/session';
 import PieChart from './pieChart';
-import { Line } from 'react-chartjs-2';
 
 Chart.register(CategoryScale);
 

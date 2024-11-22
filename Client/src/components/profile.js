@@ -13,7 +13,7 @@ function Profile() {
                 <p className='text-[#46325d]'>{userDetails.username}</p>
             </div>
             <div className='mt-10'>
-                <p><span className='font-semibold'>Therapist Consulted:</span> {userDetails.therapist == '' ? "No Consultations" : userDetails.therapist}</p>
+                <p><span className='font-semibold'>Therapist Consulted:</span> {userDetails.therapist === '' ? "No Consultations" : userDetails.therapist}</p>
             </div>
         </div>
     )
