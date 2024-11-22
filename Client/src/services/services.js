@@ -127,5 +127,10 @@ async function getAllDiaryEntriesByUsername(username) {
     }
 }
 
+async function getPatientsByTherapist(therapist) {
+    const response = await axios.get(URL + 'get-patients-by-therapist?therapist=' + therapist);
+    return response;
+}
 
-export { createDiaryEntry, createUser, getDashboardData, getReportByUsername, updateEntry, login, getAllTherapists, consultTherapist, getAllDiaryEntriesByUsername }
+
+export { createDiaryEntry, createUser, getDashboardData, getReportByUsername, updateEntry, login, getAllTherapists, consultTherapist, getAllDiaryEntriesByUsername, getPatientsByTherapist }
