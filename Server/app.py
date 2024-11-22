@@ -175,5 +175,12 @@ def consultTherapist():
     return jsonify({"error": "Couldn't consult the selected therapist. Please try again later"}), 400
 
 
+@app.route("/get-patients-by-therapist", methods=['GET'])
+def getPatientsByTherapist():
+    therapist = request.args.get('therapist')
+    patients = mongo.db.users.find({"therapist": therapist, "type": "patient"}, {'_id':0})
+    return list(patients)
+
+
 if __name__=='__main__':
     app.run(debug=True)

@@ -9,7 +9,6 @@ function Therapists() {
       const response = await getAllTherapists();
       setTherapists(response.data)
     };
-
     TherapistList();
   }, [])
 
