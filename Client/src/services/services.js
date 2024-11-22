@@ -24,7 +24,7 @@ async function createUser(username, password, type, location, exp) {
 
     try {
         let response;
-        if (type == 'therapist')
+        if (type === 'therapist')
             response = await axios.post(URL + "create-user", {
                 "username": username,
                 "password": password,
@@ -109,7 +109,7 @@ async function getReportByUsername(username) {
 async function getDashboardData(username) {
 
     try {
-        const response = await axios.get(URL + 'get-weekly-monthly-reports?id=' + username)
+        const response = await axios.get(URL + 'get-weekly-monthly-reports?username=' + username)
         return response
     } catch (error) {
         console.log(error);

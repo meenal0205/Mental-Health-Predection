@@ -17,33 +17,61 @@ const DashboardCalender = () => {
 
   const [Customdates, setCustomdates] = useState([])
 
+  const classnames = {
+    "Anxiety": "bg-blue-400",
+    "Bipolar": "bg-purple-400",
+    "Depression": "bg-gray-400",
+    "Normal": "bg-green-400",
+    " Personality Disorder": "bg-amber-400",
+    "Stress": "bg-red-400",
+    "Suicidal": "bg-gray-400"
+  }
+
+
+
+
   useEffect(() => {
     async function getEntries(username) {
       const response = await getAllDiaryEntriesByUsername(username);
-      setCustomdates(response.data);
+      const uniqueDates = [...Customdates];
 
-      Customdates.forEach(element => {
-        console.log(element.created_at);
+      response.data.forEach(element => {
+        const monthAbbreviation = element.created_at.split(" ")[2];
+        const date = new Date(`${monthAbbreviation} 1, 2000`);
+        const year = element.created_at.split(" ")[3];
+        const day = element.created_at.split(" ")[1];
+        const month = date.getMonth() + 1;
+
+        const newEntry = {
+          day: +day,
+          month: +month,
+          year: +year,
+          className: classnames[element.sentiment],
+        };
+
+        if (!uniqueDates.some(entry =>
+          entry.day === newEntry.day &&
+          entry.month === newEntry.month &&
+          entry.year === newEntry.year &&
+          entry.className === newEntry.className
+        )) {
+          uniqueDates.push(newEntry);
+        }
       });
 
-
-
+      setCustomdates(uniqueDates);
     }
-    getEntries(getUserdetails().username)
 
+    getEntries(getUserdetails().username);
+  }, []);
 
-  }, [])
 
 
   return (
     <Calendar
       shouldHighlightWeekends
-      customDaysClassName={[
-        { year: 2024, month: 11, day: 4, className: 'bg-purple-100' },
-        { year: 2024, month: 11, day: 5, className: 'bg-orange-100' },
-        { year: 2024, month: 11, day: 8, className: 'bg-yellow-100' },
-        { year: 2024, month: 11, day: 10, className: 'bg-blue-100' },
-      ]}
+      customDaysClassName={Customdates}
+
     />
   );
 };

@@ -1,57 +1,34 @@
-import React, { useState } from 'react'
-import { Line } from 'react-chartjs-2';
+import React, { useState, useEffect } from "react";
+import { Line } from "react-chartjs-2";
 
-const LineChart = () => {
-    const Data = [
-        {
-            id: 1,
-            year: "5/11/2024",
-            userGain: 0,
-            userLost: 823
-        },
-        {
-            id: 2,
-            year: "6/11/2024",
-            userGain: 1,
-            userLost: 345
-        },
-        {
-            id: 3,
-            year: "7/11/2024",
-            userGain: 3,
-            userLost: 555
-        },
-        {
-            id: 4,
-            year:" 8/11/2024",
-            userGain: 2,
-            userLost: 4555
-        },
-        {
-            id: 5,
-            year: "9/11/2024",
-            userGain: 3,
-            userLost: 234
-        }
-    ];
+const LineChart = ({ LineData, title }) => {
     const [chartData, setChartData] = useState({
-        labels: Data.map((data) => data.year),
-        datasets: [
-            {
-                label: "Users Gained ",
-                data: Data.map((data) => data.userGain),
-                backgroundColor: [
-                    "#49325D",
-                    "&quot;#573D7F",
-                    "#7151A9",
-                    "#916DD5",
-                    "#AC8BEE"
-                ],
-                borderColor: "#7151A9",
-                borderWidth: 2
-            }
-        ]
+        labels: [],
+        datasets: []
     });
+
+    useEffect(() => {
+        if (LineData && LineData.length > 0) {
+            setChartData({
+                labels: LineData.map((data) => data.date),
+                datasets: [
+                    {
+                        label: "Users Gained",
+                        data: LineData.map((data) => data.score),
+                        backgroundColor: [
+                            "#49325D",
+                            "#573D7F",
+                            "#7151A9",
+                            "#916DD5",
+                            "#AC8BEE"
+                        ],
+                        borderColor: "#7151A9",
+                        borderWidth: 2
+                    }
+                ]
+            });
+        }
+    }, [LineData]);
 
     return (
         <Line
@@ -60,7 +37,7 @@ const LineChart = () => {
                 plugins: {
                     title: {
                         display: true,
-                        text: "User Reports"
+                        text: title
                     },
                     legend: {
                         display: false
@@ -69,6 +46,6 @@ const LineChart = () => {
             }}
         />
     );
-}
+};
 
-export default LineChart
+export default LineChart;
