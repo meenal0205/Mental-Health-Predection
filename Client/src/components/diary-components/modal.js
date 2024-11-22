@@ -23,13 +23,13 @@ const Modal = ({ user, closeModal }) => {
         <div className="fixed w-full h-full bg-black bg-opacity-60 flex z-50 items-center justify-center top-0 left-0">
             <div className="flex flex-col items-center bg-white rounded-md p-10">
                 <div className=''>
-                    <h4 className='text-lg text-pink-700 font-semibold w-fit'>
+                    <h4 className='text-lg text-[#46325D] font-semibold w-fit'>
                         Create Diary Entry
                     </h4>
                     <br />
                     <form onSubmit={handleFormSubmit}>
                         <p
-                            className='italic text-pink-700'
+                            className='italic text-[#46325D]'
                         >
                             Title
                         </p>
@@ -37,7 +37,7 @@ const Modal = ({ user, closeModal }) => {
                             <input
                                 id='title'
                                 type='text'
-                                className='rounded-md px-6 pt-6 pb-1 w-full text-lg focus:outline-none text-pink-700 bg-zinc-200 peer'
+                                className='rounded-md px-6 pt-6 pb-1 w-full text-lg focus:outline-none text-[#46325D] bg-zinc-200 peer'
                                 value={title}
                                 placeholder=''
                                 onChange={(e) => { setTitle(e.target.value) }}
@@ -51,7 +51,7 @@ const Modal = ({ user, closeModal }) => {
                             </label>
                         </div>
                         <p
-                            className='italic text-pink-700'
+                            className='italic text-[#46325D]'
                         >
                             Content
                         </p>
@@ -61,7 +61,7 @@ const Modal = ({ user, closeModal }) => {
                             <textarea
                                 id='comtent'
                                 type='text'
-                                className='rounded-md px-6 pt-6 pb-1 w-full text-lg focus:outline-none text-pink-700 bg-zinc-200 peer'
+                                className='rounded-md px-6 pt-6 pb-1 w-full text-lg focus:outline-none text-[#46325D] bg-zinc-200 peer'
                                 value={content}
                                 placeholder=''
                                 onChange={(e) => { setcontent(e.target.value) }}
@@ -78,7 +78,7 @@ const Modal = ({ user, closeModal }) => {
 
                         <br />
                         <button
-                            className='bg-pink-700 text-white rounded-md px-6 py-2 w-full text-lg focus:outline-none mb-3'
+                            className='bg-[#46325D] text-white rounded-md px-6 py-2 w-full text-lg focus:outline-none mb-3'
                             type="submit"
                         >
                             Create
@@ -86,7 +86,7 @@ const Modal = ({ user, closeModal }) => {
 
                         <br />
                         <button
-                            className='bg-white text-pink-700 border-2 border-pink-700 rounded-md px-6 py-2 w-full text-lg focus:outline-none'
+                            className='bg-white text-[#46325D] border-2 border-[#46325D] rounded-md px-6 py-2 w-full text-lg focus:outline-none'
                             type="submit"
                             onClick={() => { closeModal() }}
                         >
