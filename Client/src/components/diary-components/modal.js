@@ -21,13 +21,13 @@ const Modal = ({ user, closeModal }) => {
     }
     return (
         <div className="fixed w-full h-full bg-black bg-opacity-60 flex z-50 items-center justify-center top-0 left-0">
-            <div className="flex flex-col items-center bg-white rounded-md p-10">
-                <div className=''>
+            <div className="flex flex-col items-center w-1/3 bg-white rounded-md p-10">
+                <div className='w-full'>
                     <h4 className='text-lg text-[#46325D] font-semibold w-fit'>
                         Create Diary Entry
                     </h4>
                     <br />
-                    <form onSubmit={handleFormSubmit}>
+                    <form onSubmit={handleFormSubmit} className='w-full'>
                         <p
                             className='italic text-[#46325D]'
                         >
@@ -50,13 +50,12 @@ const Modal = ({ user, closeModal }) => {
                                 Title
                             </label>
                         </div>
+                        <br />
                         <p
                             className='italic text-[#46325D]'
                         >
                             Content
                         </p>
-
-
                         <div className='relative'>
                             <textarea
                                 id='comtent'
