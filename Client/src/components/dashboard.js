@@ -64,7 +64,7 @@ function Dashboard() {
         <LineChart LineData={LineChartDataWeek} title="Weeky Reports" />
       </div>
       <div className='p-4 col-span-2 row-auto rounded-md shadow-lg bg-white z-0 flex justify-center'>
-        <DashboardCalender />
+        <DashboardCalender username={getUserdetails().username} />
       </div>
       <div className='p-4 col-span-2 row-auto rounded-md shadow-lg bg-white'>
         <PieChart PieData={PieChartData} />

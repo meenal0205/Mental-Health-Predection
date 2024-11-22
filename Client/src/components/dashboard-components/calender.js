@@ -5,7 +5,7 @@ import { getAllDiaryEntriesByUsername } from "../../services/services";
 import { getUserdetails } from "../../utils/session";
 
 
-const DashboardCalender = () => {
+const DashboardCalender = ({ username }) => {
   let date = new Date();
   const defaultValue = {
     year: date.getFullYear(),
@@ -18,17 +18,14 @@ const DashboardCalender = () => {
   const [Customdates, setCustomdates] = useState([])
 
   const classnames = {
-    "Anxiety": "bg-blue-400",
-    "Bipolar": "bg-purple-400",
-    "Depression": "bg-gray-400",
-    "Normal": "bg-green-400",
-    " Personality Disorder": "bg-amber-400",
-    "Stress": "bg-red-400",
-    "Suicidal": "bg-gray-400"
+    "Anxiety": "bg-blue-100",
+    "Bipolar": "bg-purple-100",
+    "Depression": "bg-slate-200",
+    "Normal": "bg-green-100",
+    "Personality Disorder": "bg-amber-100",
+    "Stress": "bg-red-100",
+    "Suicidal": "bg-gray-300"
   }
-
-
-
 
   useEffect(() => {
     async function getEntries(username) {
@@ -62,17 +59,26 @@ const DashboardCalender = () => {
       setCustomdates(uniqueDates);
     }
 
-    getEntries(getUserdetails().username);
+    getEntries(username);
   }, []);
 
 
 
   return (
-    <Calendar
-      shouldHighlightWeekends
-      customDaysClassName={Customdates}
-
-    />
+    <div className="ml-14">
+      <Calendar
+        shouldHighlightWeekends
+        customDaysClassName={Customdates}
+      />
+      <div className="flex flex-wrap gap-y-2 gap-x-8 mt-4">
+        {Object.keys(classnames).map(key => (
+          <div key={key} className="flex gap-1 items-center">
+            <div className={`w-12 h-4 ${classnames[key]}`} />
+            <span className="text-sm text-gray-600">{key}</span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

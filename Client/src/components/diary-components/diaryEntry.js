@@ -29,9 +29,8 @@ const icons = {
 
 function DiaryEntry({ title, content, date, sentiment }) {
 
-
     return (
-        <div className='flex gap-x-3 bg-white shadow-md rounded-md border-transparent mb-5 h-28 p-4 font-mono'>
+        <div className='flex gap-x-3 bg-white shadow-md rounded-md border-transparent mb-5 h-fit p-4 font-mono'>
             <div className='flex flex-col justify-center mx-4 border-r-2 border-gray-300 pr-5 '>
                 <p className='mx-auto text-2xl font-bold '>{date.split(" ")[1]}</p>
                 <p>{date.split(" ")[2]}</p>
@@ -39,7 +38,7 @@ function DiaryEntry({ title, content, date, sentiment }) {
             </div>
             <div className=' mx-4 border-r-2 border-gray-300 pr-5 '>
                 <h2 className='font-semibold mb-1'>{title}</h2>
-                <p className='text-sm'>{sliceByWords(content, 180)}... </p>
+                <p className='text-sm'>{content} </p>
             </div>
             <div className='my-auto'>
                 <Icon icon={`${icons[sentiment]}`} width={40} className={`${colors[sentiment]}`} />

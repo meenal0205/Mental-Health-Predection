@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import TherapistDashboard from './pages/TherapistDashboard';
 import Profile from './components/profile';
+import PatientDetails from './components/PatientDetails';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
           <Route path='/diary' element={<Diary />} />
           <Route path='/therapists' element={<Therapists />} />
           <Route path='/profile' element={<Profile />} />
+
         </Route>
         <Route element={
           <div className='w-full bg-[#f7f3ff]'>
@@ -53,6 +55,8 @@ function App() {
           </div>
         } >
           <Route path='/therapist-dashboard' element={<TherapistDashboard />} />
+          <Route path='/details' element={<PatientDetails />} />
+
         </Route>
       </Routes>
     </Router>
