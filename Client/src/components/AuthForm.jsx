@@ -9,52 +9,39 @@ const AuthForm = ({ type }) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
-    const [statusMessage, setStatusMessage] = useState('');
-    const [location, setlocation] = useState('pune')
-    const [exp, setExp] = useState(0)
-    const [notification, setNotification] = useState(false)
-
-
-    function SetNotif(message) {
-        setStatusMessage(message)
-        setNotification(true)
-        setTimeout(() => {
-            setNotification(false)
-
-        }, 2000);
-    }
-
+    const [location, setlocation] = useState('')
+    const [exp, setExp] = useState()
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         let response;
         if (type === "login") {
-            response = await login(username, password, userType)
-            if (response.status == 202) {
-                SetNotif("Login successful!");
-                setUser(username, userType)
-                console.log(getUserdetails());
-                navigate('/dashboard')
+            try {
+                response = await login(username, password, userType)
+                if (response.status === 200) {
+                    setUser(response.data.username, response.data.type, response.data.therapist ? response.data.therapist : "")
+                    console.log(getUserdetails());
+                    navigate('/dashboard')
+                }
             }
-            else {
-                SetNotif("Login Failed! Try again")
+            catch (error) {
+                console.error(error);
+                setMessage(error.response?.data.error)
             }
         }
         else {
-            if (password == confirmPassword) {
+            if (password === confirmPassword) {
                 response = await createUser(username, password, userType, location, exp)
-                console.log(response);
-                if (response.status == 202) {
-
-                    SetNotif("User Register successfully!")
+                if (response.status === 202) {
                     navigate('/login')
                 }
                 else {
-                    SetNotif("Something went wrong. Cant create user")
+                    setMessage("Something went wrong. Cant create user")
                 }
+                setMessage("")
             }
             else {
-                SetNotif("Password and confirmed password do not match")
+                setMessage("Password and confirmed password do not match")
             }
         }
     }
@@ -73,7 +60,6 @@ const AuthForm = ({ type }) => {
                 <h2 className='absolute top-4 left-4 text-3xl text-[#916DD5] font-semibold w-fit'>
                     MyTherapist
                 </h2>
-                {notification && <span className='absolute w-fit h-30 bg-white rounded-md border-2 border-[#916DD5] z-40 top-12 p-2'>{statusMessage}</span>}
                 <div className='bg-white p-12 rounded-lg shadow-xl w-1/3'>
                     <h2 className='text-3xl text-[#916DD5] font-semibold mb-10'>{type === 'register' ? 'Register' : 'Login'}</h2>
                     <form onSubmit={handleFormSubmit}>
@@ -102,13 +88,6 @@ const AuthForm = ({ type }) => {
                             </div>
                         </div>
                         <br />
-                        {type === 'login' &&
-                            <p
-                                className='italic text-[#916DD5]'
-                            >
-                                {message}
-                            </p>
-                        }
                         <div className='relative'>
                             <input
                                 id='username'
@@ -159,10 +138,7 @@ const AuthForm = ({ type }) => {
                                 >
                                     Confirm Password
                                 </label>
-
-
                             </div>
-
                             <br />
                             <div className='relative'>
                                 <input
@@ -179,13 +155,9 @@ const AuthForm = ({ type }) => {
                                 >
                                     Location
                                 </label>
-
-
                             </div>
                             <br />
-
-                            {userType == 'therapist' &&
-
+                            {userType === 'therapist' &&
                                 <div className='relative'>
                                     <input
                                         id='exp'
@@ -201,19 +173,13 @@ const AuthForm = ({ type }) => {
                                     >
                                         Years of Expirience
                                     </label>
-
-
                                 </div>
                             }
-
-
-                            <p
-                                className='italic text-[#916DD5]'
-                            >
-                                {message}
-                            </p>
                         </>)}
                         <br />
+                        <p className='italic text-[#916DD5]'>
+                            {message}
+                        </p>
                         <button
                             className='bg-[#916DD5] text-white rounded-md px-6 py-2 w-full text-lg focus:outline-none'
                             type="submit"
