@@ -7,11 +7,13 @@ import { getUserdetails } from '../utils/session'
 function Profile() {
     const userDetails = getUserdetails();
     return (
-        <div className='m-auto mt-20 w-80 h-80 bg-white rounded-md shadow-md'>
-            <Icon icon="ix:user-profile-filled" width={70} className='m-auto relative top-10' />
-            <div className='relative left-20 top-20'>
-                <p> Username : {userDetails.username}</p>
-                <p>Therpist Consulted : {userDetails.therapist = '' ? "No Consultations" : userDetails.therapist}</p>
+        <div className='m-auto p-20 px w-fit h-fit bg-white rounded-md shadow-md'>
+            <div className='flex flex-col items-center'>
+                <Icon icon="ix:user-profile-filled" width={100} color='#46325d' />
+                <p className='text-[#46325d]'>{userDetails.username}</p>
+            </div>
+            <div className='mt-10'>
+                <p><span className='font-semibold'>Therapist Consulted:</span> {userDetails.therapist = '' ? "No Consultations" : userDetails.therapist}</p>
             </div>
         </div>
     )

@@ -6,7 +6,7 @@ const PatientEntry = ({ name, location }) => {
         <div className='shadow-md rounded-md p-3 bg-white'>
             <div className='flex gap-5 font-mono'>
                 <div className='p-2 rounded-full border-2 border-[#46325d] my-auto'>
-                    <Icon icon="tdesign:user-filled" className='text-[#46325d]' width={25} />
+                    <Icon icon="tdesign:user-filled" color='#46325d' width={25} />
                 </div>
                 <div>
                     <h2 className='font-semibold'>
